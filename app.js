@@ -12,15 +12,47 @@ function onClick() {
   };
 	
 
-var win_html3 = `<div style="display: flex;">
+var win_html3 = `<div style="cursor: -webkit-grab; display: flex; ">
 <button id="btn" type="button" onClick="onClick()"> Нажми на меня </button>
   <p>Количество обращений в Support tab: <a id="clicks">0</a></p> 
           </div>`;
 
-let wint3 = document.createElement('div');
-document.body.append(wint3);
-wint3.style = 'min-height: 20px; max-height: 750px; min-width: 35px; max-width: 370px; background: wheat; top:405px ; left:562px;   font-size: 14px; z-index: 20; position: fixed; border: 1px solid rgb(56, 56, 56); color: black';
-wint3.innerHTML = win_html3;
+
+
+
+var url = window.location.href;
+
+
+
+if( url.includes('jira.skyeng.tech')){
+  let wint3 = document.createElement('div');
+  document.body.append(wint3);
+  wint3.style = 'min-height: 20px; max-height: 750px; min-width: 35px; max-width: 370px; background: wheat; top:405px ; left:562px;   font-size: 14px; border: 1px solid rgb(56, 56, 56); color: white;position: absolute; background: black;';
+  wint3.innerHTML = win_html3;
+}
+else{
+  
+                
+  if(url.includes('skyeng.autofaq.ai')){
+    var win_html4 = `<div style="display: flex;  ">
+                  <span style="cursor: -webkit-grab;">
+                    <input id='devjira' style="margin:5px;placeholder="Вставь таску с jira сюда"> </input>
+                  </span>
+                </div>`;
+
+
+    let wint4 = document.createElement('div');
+    document.body.append(wint4);
+    wint4.style = 'min-height: 20px; max-height: 750px; min-width: 35px; max-width: 370px; back ground: wheat; top: 10px; left:500px; font-size: 14px; border: 1px solid rgb(56, 56, 56); color: white;position: absolute; z-index: 20; width: 10%; background: black;';
+    wint4.innerHTML = win_html4;  
+  }
+  
+}
+
+
+
+
+
 
 document.getElementById('btn').onclick = function (){
   clicks += 1;
@@ -32,8 +64,9 @@ document.getElementById('btn').onclick = function (){
 
 
   }
+}
 
-  }
+
 
 
 let findElement = document.querySelector('[data-fieldtypecompletekey="com.atlassian.jira.plugin.system.customfieldtypes:float"]');

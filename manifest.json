@@ -12,7 +12,7 @@
       },
     "content_scripts": [
         {
-            "matches": [ "https://jira.skyeng.tech/*" ],
+            "matches": [ "https://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*"],
             "js": [ "app.js" ]
         }
 
