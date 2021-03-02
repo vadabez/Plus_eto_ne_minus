@@ -18,6 +18,6 @@
 
     ],
     "permissions": [
-        "*://*.jira.skyeng.tech/*","*://skyeng.autofaq.ai/*"
+        "*://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*"
     ]
  }
