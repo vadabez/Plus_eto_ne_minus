@@ -15,7 +15,6 @@
             "matches": [ "https://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*"],
             "js": [ "app.js" ]
         }
-
     ],
     "permissions": [
         "*://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*"

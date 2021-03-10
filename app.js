@@ -56,28 +56,53 @@ style="
     <a style="text-decoration: none; cursor: default;" id="clicks">0</a></p> 
   </div>`;
   
-
+  var win_html4 = `<div id="devjira" style="cursor: -webkit-grab; display: flex; position: absolute; ">
+  <input type="text" id="task" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
+  <button id="btn_1" type="button" onclick="handleButtonClick3()"> +1 </button>
+  </div>`;
  
   
-
+  
 
 var url = window.location.href;
 let findComment = document.querySelector('[class = "chat-comment"]');
 
 
 
-if( url.includes('jira.skyeng.tech')){
-  
-}
-else{
-    if(findComment != null){
-      console.log("Я нашел твой комментарий");
+if( url.includes('skyeng.autofaq.ai')){
+  let wint4 = document.createElement('div');
+  document.body.append(wint4);
+  wint4.style = 'min-height: 40px; max-height: 750px; min-width: 290px; max-width: 400px; background: wheat; top:16px ; left:400px;   font-size: 20px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20;';
+  wint4.innerHTML = win_html4; 
 
-      // supportTabOld = document.getElementById("customfield_15410-val").textContent;
-      // supportTabOld = parseInt(supportTabOld);
-      // console.log("Слышь, тут support tab =", supportTabOld);
-    };
-  };
+  var button2 = document.getElementById("btn_1")
+  button2.onclick = handleButtonClick3;
+  function handleButtonClick3() {
+    var textInput = document.getElementById("task");
+    var taskName = textInput.value;
+    if(taskName == ""){
+        console.log("Введите ссылку на задачу, пожалуйста");
+    }else{
+        var ul  =  document.getElementById("task");
+        var li = document.createElement("li");
+        li.innerHTML = taskName;
+        ul.appendChild(li);
+
+
+        console.log("Ты добавил новую таску " + taskName);
+        // chrome.runtime.sendMessage({name: "Plus_eto_ne_minus", question: 'get_devjira', id: taskName}, function(response) {
+        //   copyToClipboard(response.answer.data.link);
+        // });
+        chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'get_devjira',id: taskName}, function(supportTabNew, issueID, token){
+         chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'plus_support_tab',id: supportTabNew, issueID, token});
+        });
+
+
+        textInput.value = "";
+    }
+  }
+}
+
 
 let findElement = document.querySelector('[data-fieldtypecompletekey="com.atlassian.jira.plugin.system.customfieldtypes:float"]');
 
