@@ -93,10 +93,8 @@ if( url.includes('skyeng.autofaq.ai')){
         // chrome.runtime.sendMessage({name: "Plus_eto_ne_minus", question: 'get_devjira', id: taskName}, function(response) {
         //   copyToClipboard(response.answer.data.link);
         // });
-        chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'get_devjira',id: taskName}, function(supportTabNew, issueID, token){
-         chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'plus_support_tab',id: supportTabNew, issueID, token});
-        });
-
+        chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'get_devjira',id: taskName});
+        
 
         textInput.value = "";
     }

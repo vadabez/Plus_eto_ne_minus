@@ -27,6 +27,26 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
 
                 var token = document.getElementsByTagName("input")[2].value;
                 
+
+                fetch("https://jira.skyeng.tech/secure/AjaxIssueAction.jspa?decorator=none", {  
+                "headers": {
+                "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                        },
+                "body": `customfield_15410=${supportTabNew}&issueId=${issueID}&atl_token=${token}`, //https://jira.skyeng.tech/browse/VIM-11161/
+                "method": "POST",
+                "credentials": "include"
+                })
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error))
+                .then(text =>{
+                    text = "";
+                    let page = document.createElement('html');
+                    document.body.append(page);
+                    page.innerHTML = text; 
+                    window.location.reload(); 
+                    })
+
                 // let A1=text.match("customfield_15410-val.*");
                 // let customfield=A1[0].split("\"")[8]; //Не работает и выдает в конце undef
                 
@@ -38,24 +58,24 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
 });
 
 
-chrome.runtime.onMessage.addListener(function (request, supportTabNew, issueID, token, sender, sendResponse) {
-    if (request.name === "Plus_eto_ne_minus") {
-        if (request.question == 'plus_support_tab') {
-        fetch("https://jira.skyeng.tech/secure/AjaxIssueAction.jspa?decorator=none", {  
-        "headers": {
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-                        },
-            "body": `customfield_15410=${supportTabNew}&issueId=${issueID}&atl_token=${token}`, //https://jira.skyeng.tech/browse/VIM-11161/
-            "method": "POST",
-            "credentials": "include"
-        })
-         .then(response => response.text())
-         .then(result => console.log(result))
-        .catch(error => console.log('error', error))
-    }
-    return true;
-};
-});
+// chrome.runtime.onMessage.addListener(function (request, supportTabNew, issueID, token, sender, sendResponse) { //Не работает
+//     if (request.name === "Plus_eto_ne_minus") {
+//         if (request.question == 'plus_support_tab') {
+//         fetch("https://jira.skyeng.tech/secure/AjaxIssueAction.jspa?decorator=none", {  
+//         "headers": {
+//             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+//                         },
+//             "body": `customfield_15410=${supportTabNew}&issueId=${issueID}&atl_token=${token}`, //https://jira.skyeng.tech/browse/VIM-11161/
+//             "method": "POST",
+//             "credentials": "include"
+//         })
+//          .then(response => response.text())
+//          .then(result => console.log(result))
+//         .catch(error => console.log('error', error))
+//     }
+//     return true;
+// };
+// });
 
 
 
