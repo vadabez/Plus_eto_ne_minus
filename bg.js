@@ -46,10 +46,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
                     page.innerHTML = text; 
                     window.location.reload(); 
                     })
-
-                // let A1=text.match("customfield_15410-val.*");
-                // let customfield=A1[0].split("\"")[8]; //Не работает и выдает в конце undef
-                
                 sendResponse({answer: supportTabNew, issueID, token}) 
                 })
           return true;

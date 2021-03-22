@@ -17,14 +17,70 @@ button:active {
 }`;
 
 function plusClick() {
-    clicks += 1;
-    document.getElementById("clicks").innerHTML = clicks
-  };
+  clicks += 1;
+  document.getElementById("clicks").innerHTML = clicks
+};
 
-// function devJira() {
-//     document.getElementById("devjira").innerHTML = jiraSupportTab
-//     console.log("Ты написал = ", jiraSupportTab)
-// };
+var docWidth, docHeight, docRatio, div = document.getElementsByTagName('div')[0];
+
+onresize = function()
+{
+  docWidth = document.body.clientWidth;
+  docHeight = document.body.clientHeight;
+  // ширина и высота вьюпорта
+
+  docRatio = docWidth / docHeight;
+  // соотношение сторон вьюпорта
+
+  fullScreenProportionalElem(div, 1920, 1080); // элемент, ширина, высота
+  resizeFont(div, 1920, 1080, 200); // элемент, ширина, высота, размер шрифта
+  // размер шрифта зависит от выставленной ширины и высоты
+}
+
+function fullScreenProportionalElem(elem, width, height)
+{
+  var ratio = width / height;
+  // соотношение сторон элемента
+
+  if (docRatio < ratio)
+  {
+    elem.style.width = docWidth + 'px';
+    elem.style.height = Math.round(docWidth / ratio) + 'px';
+    elem.style.top = Math.round(docHeight / 2 - elem.offsetHeight / 2) + 'px';
+    elem.style.left = '0px';
+    // высота вьюпорта больше чем высота элемента
+    // ширину элемента приравниваем к ширине вьюпорта, высоту вычисляем, центрируем элемент по высоте
+  }
+  else if (docRatio > ratio)
+  {
+    elem.style.width = Math.round(docHeight * ratio) + 'px';
+    elem.style.height = docHeight + 'px';
+    elem.style.top = '0px';
+    elem.style.left = Math.round(docWidth / 2 - elem.offsetWidth / 2) + 'px';
+    // ширина вьюпорта больше чем ширина элемента
+    // высоту элемента приравниваем к высоте вьюпорта, ширину вычисляем, центрируем элемент по ширине
+  }
+  else
+  {
+    elem.style.width = docWidth + 'px';
+    elem.style.height = docHeight + 'px';
+    elem.style.top = '0px';
+    elem.style.left = '0px';
+    // соотношение сторон вьюпорта равно соотношению сторон элемента
+    // приравниваем стороны элемента к сторонам вьюпорта, обнуляем значения top и left
+  }
+}
+
+function resizeFont(elem, width, height, size)
+{
+  var ratio = width / height;
+  // соотношение сторон элемента
+  
+  if (docRatio < ratio) elem.style.fontSize = height * size / 14062 + 'vw';
+  else if (docRatio > ratio) elem.style.fontSize = width * size / 14062 + 'vh';
+  // число 14062 можно менять и подстраивать под себя, будет меняться размер шрифта
+}
+
 
 	
 
@@ -58,22 +114,77 @@ style="
   
   var win_html4 = `<div id="devjira" style="cursor: -webkit-grab; display: flex; position: absolute; ">
   <input type="text" id="task" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
-  <button id="btn_1" type="button" onclick="handleButtonClick3()"> +1 </button>
+  <button id="btn_1" type="button" style="
+  position: relative;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  color: rgb(209,209,217);
+  text-decoration: none;
+  text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+  padding: .5em 1em;
+  outline: none;
+  border-radius: 3px;
+  background: linear-gradient(rgb(110,112,120), rgb(81,81,86)) rgb(110,112,120);
+  box-shadow:
+  0 1px rgba(255,255,255,.2) inset,
+  0 3px 5px rgba(0,1,6,.5),
+  0 0 1px 1px rgba(0,1,6,.2);
+  transition: .2s ease-in-out;" onclick="handleButtonClick3()"> +1 </button>
   </div>`;
- 
-  
-  
+
+  var win_html5 = `<div id="devjora" style="cursor: -webkit-grab; display: flex; position: absolute; ">
+  <input type="text" id="task_2" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
+  <button id="btn_2" type="button" style="
+  position: relative;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  color: rgb(209,209,217);
+  text-decoration: none;
+  text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+  padding: .5em 1em;
+  outline: none;
+  border-radius: 3px;
+  background: linear-gradient(rgb(110,112,120), rgb(81,81,86)) rgb(110,112,120);
+  box-shadow:
+  0 1px rgba(255,255,255,.2) inset,
+  0 3px 5px rgba(0,1,6,.5),
+  0 0 1px 1px rgba(0,1,6,.2);
+  transition: .2s ease-in-out;" onclick="handleButtonClick4()"> +1 </button>
+  </div>`;
 
 var url = window.location.href;
-let findComment = document.querySelector('[class = "chat-comment"]');
-
-
 
 if( url.includes('skyeng.autofaq.ai')){
+  if (localStorage.getItem('wint4TopAF') == null) {
+    localStorage.setItem('wint4TopAF', '15');
+    localStorage.setItem('wint4LeftAF', '400');
+  }
+  
   let wint4 = document.createElement('div');
   document.body.append(wint4);
-  wint4.style = 'min-height: 40px; max-height: 750px; min-width: 290px; max-width: 400px; background: wheat; top:16px ; left:400px;   font-size: 20px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20;';
+  wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20;';
   wint4.innerHTML = win_html4; 
+
+
+
+
+
+  var listener2 = function(e , a) {
+    wint4.style.left = Number(e.clientX - myX2) + "px";
+    wint4.style.top = Number(e.clientY - myY2) + "px";
+    localStorage.setItem('wint4TopAF', String(Number(e.clientY - myY2)));
+    localStorage.setItem('wint4LeftAF', String(Number(e.clientX - myX2)));
+  };
+
+  wint4.onmousedown = function (a) {
+    window.myX2 = a.layerX; 
+    window.myY2 = a.layerY; 
+    document.addEventListener('mousemove', listener2);
+  }
+  wint4.onmouseup = function () {document.removeEventListener('mousemove', listener2);}
+
 
   var button2 = document.getElementById("btn_1")
   button2.onclick = handleButtonClick3;
@@ -87,19 +198,62 @@ if( url.includes('skyeng.autofaq.ai')){
         var li = document.createElement("li");
         li.innerHTML = taskName;
         ul.appendChild(li);
-
-
         console.log("Ты добавил новую таску " + taskName);
-        // chrome.runtime.sendMessage({name: "Plus_eto_ne_minus", question: 'get_devjira', id: taskName}, function(response) {
-        //   copyToClipboard(response.answer.data.link);
-        // });
         chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'get_devjira',id: taskName});
-        
-
         textInput.value = "";
     }
   }
 }
+else{
+  if(url.includes('crm2.skyeng.ru')){
+    if (localStorage.getItem('wint5TopAF') == null) {
+      localStorage.setItem('wint5TopAF', '2');
+      localStorage.setItem('wint5LeftAF', '840');
+    }
+
+    let wint5 = document.createElement('div');
+    document.body.append(wint5);
+    wint5.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint5TopAF') + 'px; left: ' + localStorage.getItem('wint5LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20;';
+    wint5.innerHTML = win_html5; 
+
+    
+    var listener3 = function(e , a) {
+      wint5.style.left = Number(e.clientX - myX2) + "px";
+      wint5.style.top = Number(e.clientY - myY2) + "px";
+      localStorage.setItem('win5TopAF', String(Number(e.clientY - myY2)));
+      localStorage.setItem('win5LeftAF', String(Number(e.clientX - myX2)));
+    };
+  
+    wint5.onmousedown = function (a) {
+      window.myX2 = a.layerX; 
+      window.myY2 = a.layerY; 
+      document.addEventListener('mousemove', listener3);
+    }
+    wint5.onmouseup = function () {document.removeEventListener('mousemove', listener3);}
+  
+  
+
+
+    var button3 = document.getElementById("btn_2")
+    button3.onclick = handleButtonClick4;
+    function handleButtonClick4() {
+    var textInput = document.getElementById("task_2");
+    var taskName = textInput.value;
+    if(taskName == ""){
+        console.log("Введите ссылку на задачу, пожалуйста");
+    }
+    else{
+        var ul  =  document.getElementById("task_2");
+        var li = document.createElement("li");
+        li.innerHTML = taskName;
+        ul.appendChild(li);
+        console.log("Ты добавил новую таску " + taskName);
+        chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'get_devjira',id: taskName});
+        textInput.value = "";
+      };
+    };
+  };
+};
 
 
 let findElement = document.querySelector('[data-fieldtypecompletekey="com.atlassian.jira.plugin.system.customfieldtypes:float"]');
@@ -109,26 +263,29 @@ var supportTabOld,supportTabNew;
 if(findElement !== null )
 {
   // console.log("Я нашел Support Tab");
+  if (localStorage.getItem('TopAF') == null) {
+    localStorage.setItem('TopAF', '348');
+    localStorage.setItem('LeftAF', '750');
+  }
+
   let wint3 = document.createElement('div');
   document.body.append(wint3);
-  wint3.style = 'min-height: 50px; max-height: 750px; min-width: 370px; max-width: 400px; background: wheat; top:405px ; left:562px;   font-size: 14px; border: 1px solid rgb(56, 56, 56); color: white;position: absolute; background: black;z-index:20;';
+  wint3.style = 'min-height: 50px; max-height: 750px; min-width: 370px; max-width: 400px; background: wheat; top: ' + localStorage.getItem('TopAF') + 'px; left: ' + localStorage.getItem('LeftAF') + 'px;  font-size: 15px; border: 1px solid rgb(56, 56, 56); color: white;position: absolute; background: black;z-index:20;';
   wint3.innerHTML = win_html3; 
 
-  var drag = document.getElementById('draggable');
-  var listener = function(e) {
-    wint3.style.left =  Number(e.clientX - myX3) + "px";
-    wint3.style.top =  Number(e.clientY - myY3) + "px";
+  var listener = function(e , a) {
+    wint3.style.left = Number(e.clientX - myX2) + "px";
+    wint3.style.top = Number(e.clientY - myY2) + "px";
+    localStorage.setItem('TopAF', String(Number(e.clientY - myY2)));
+    localStorage.setItem('LeftAF', String(Number(e.clientX - myX2)));
   };
- 
-  drag.onmousedown = function (e) {
-		window.myX3 = e.layerX; 
-		window.myY3 = e.layerY; 
-		document.addEventListener('mousemove', listener);
-	}
 
-  drag.addEventListener('mouseup', e => {
-    document.removeEventListener('mousemove', listener);
-  }); 
+  wint3.onmousedown = function (a) {
+    window.myX2 = a.layerX; 
+    window.myY2 = a.layerY; 
+    document.addEventListener('mousemove', listener);
+  }
+  wint3.onmouseup = function () {document.removeEventListener('mousemove', listener);}
   
  
  
@@ -172,9 +329,3 @@ if(findElement !== null )
   };
 
 }
-
-  
-
-// Чтобы залить на jira через AF нужно это делать через fetch 
-// отрисовать html страницу 
-// Потом match и найти совпадение по reports..

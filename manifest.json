@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Plus_eto_ne_minus",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Добавляет +1 в Jira",
     "icons": {
         "128": "plus.png"
@@ -12,11 +12,11 @@
       },
     "content_scripts": [
         {
-            "matches": [ "https://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*"],
+            "matches": [ "https://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*", "https://crm2.skyeng.ru/*"],
             "js": [ "app.js" ]
         }
     ],
     "permissions": [
-        "*://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*"
+        "*://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*", "https://crm2.skyeng.ru/*"
     ]
  }
