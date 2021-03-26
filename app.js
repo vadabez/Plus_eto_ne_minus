@@ -156,6 +156,7 @@ style="
 
 var url = window.location.href;
 
+
 if( url.includes('skyeng.autofaq.ai')){
   if (localStorage.getItem('wint4TopAF') == null) {
     localStorage.setItem('wint4TopAF', '15');
@@ -166,10 +167,6 @@ if( url.includes('skyeng.autofaq.ai')){
   document.body.append(wint4);
   wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20;';
   wint4.innerHTML = win_html4; 
-
-
-
-
 
   var listener2 = function(e , a) {
     wint4.style.left = Number(e.clientX - myX2) + "px";
@@ -186,6 +183,63 @@ if( url.includes('skyeng.autofaq.ai')){
   wint4.onmouseup = function () {document.removeEventListener('mousemove', listener2);}
 
 
+  async function getInfo() {
+    adr = document.location.href
+    adr1 = document.location.pathname
+    adr1 = adr1.split('/')
+    adr1 = adr1[3]
+    if(adr1 == undefined) {
+      adr1 = ""
+      sessionId = ""
+    }
+    else {
+      a = await fetch("https://skyeng.autofaq.ai/api/conversations/"+adr1, {
+    "headers": {
+    "accept": "*/*",
+    "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+    "cache-control": "max-age=0",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin"
+    },
+    "referrer": adr,
+    "referrerPolicy": "no-referrer-when-downgrade",
+    "body": null,
+    "method": "GET",
+    "mode": "cors",
+    "credentials": "include"
+  })
+  .then(a => b = a.json()).then(b => {sessionId = b.sessionId; localStorage.setItem('serviceIdGlob', b.serviceId)});
+    return [adr, adr1, sessionId]
+  }}
+
+async function sendComment(txt){ 
+  var values = await getInfo(0)
+  adr = values[0]; adr1 = values[1]; uid = values[2]
+  var txt2 = txt.split('\n').join('\\n') //экранирование текста
+  var txt2 = txt2.split("\"").join("\\\"") //экранирование кавычек
+  fetch("https://skyeng.autofaq.ai/api/reason8/answers", {
+  "headers": {
+  "accept": "*/*",
+  "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+  "cache-control": "max-age=0",
+  "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryH2CK1t5M3Dc3ziNW", //Показатель разделения строк
+  "sec-fetch-dest": "empty",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-site": "same-origin"
+  },
+  "referrer": adr,
+  "referrerPolicy": "no-referrer-when-downgrade",
+  "body": "------WebKitFormBoundaryH2CK1t5M3Dc3ziNW\r\nContent-Disposition: form-data; name=\"payload\"\r\n\r\n{\"sessionId\":\"" + uid + "\",\"conversationId\":\"" + adr1 + "\",\"text\":\"" + txt2 + "\",\"isComment\":true}\r\n------WebKitFormBoundaryH2CK1t5M3Dc3ziNW--\r\n",
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "include"
+  });
+}
+  
+
+
+
   var button2 = document.getElementById("btn_1")
   button2.onclick = handleButtonClick3;
   function handleButtonClick3() {
@@ -193,14 +247,30 @@ if( url.includes('skyeng.autofaq.ai')){
     var taskName = textInput.value;
     if(taskName == ""){
         console.log("Введите ссылку на задачу, пожалуйста");
-    }else{
+    }
+    else{
         var ul  =  document.getElementById("task");
         var li = document.createElement("li");
         li.innerHTML = taskName;
         ul.appendChild(li);
         console.log("Ты добавил новую таску " + taskName);
         chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'get_devjira',id: taskName});
+        sendComment(document.getElementById('task').value);
         textInput.value = "";
+        newTaggg(taskName);
+
+        function newTaggg(tagName) {
+          var chatId = document.location.pathname.split('/')[3]
+          fetch("https://skyeng.autofaq.ai/api/conversation/" + chatId + "/payload", {
+            "headers": {
+            "content-type": "application/json",
+            },
+            "body": "{\"conversationId\":\"" + chatId + "\",\"elements\":[{\"name\":\"taskUrl\",\"value\":\"" + tagName + "\"}]}",
+            "method": "POST",
+            "credentials": "include"
+          }); //Работает отлично, вот рекорд https://recordit.co/lvhOOVFr0O
+        }
+
     }
   }
 }
@@ -230,9 +300,6 @@ else{
       document.addEventListener('mousemove', listener3);
     }
     wint5.onmouseup = function () {document.removeEventListener('mousemove', listener3);}
-  
-  
-
 
     var button3 = document.getElementById("btn_2")
     button3.onclick = handleButtonClick4;
@@ -287,9 +354,6 @@ if(findElement !== null )
   }
   wint3.onmouseup = function () {document.removeEventListener('mousemove', listener);}
   
- 
- 
-
   findElement[1];
   supportTabOld = document.getElementById("customfield_15410-val").textContent;
   supportTabOld = parseInt(supportTabOld);
@@ -305,8 +369,6 @@ if(findElement !== null )
     var token = document.cookie.match(/atlassian.xsrf.token=(.*?);/)[1];
 
     let findissueID = document.getElementById("key-val");
-
-    
 
     if(findissueID!=null){
       var issueID;
@@ -325,7 +387,5 @@ if(findElement !== null )
     .then(result => console.log(result))
     .catch(error => console.log('error', error))
     window.location.reload();
-    
   };
-
 }
