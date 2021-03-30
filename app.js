@@ -112,8 +112,8 @@ style="
     <a style="text-decoration: none; cursor: default;" id="clicks">0</a></p> 
   </div>`;
   
-  var win_html4 = `<div id="devjira" style="cursor: -webkit-grab; display: flex; position: absolute; ">
-  <input type="text" id="task" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
+  var win_html4 = `<div id="devjira" style="background-color: black; cursor: -webkit-grab; display: flex; position: absolute; ">
+  <input type="text" id="task" style="border-color: black;" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
   <button id="btn_1" type="button" style="
   position: relative;
   display: inline-block;
@@ -131,7 +131,29 @@ style="
   0 3px 5px rgba(0,1,6,.5),
   0 0 1px 1px rgba(0,1,6,.2);
   transition: .2s ease-in-out;" onclick="handleButtonClick3()"> +1 </button>
-  </div>`;
+
+  <button id="search_task" type="button" style="
+  position: relative;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  color: rgb(209,209,217);
+  text-decoration: none;
+  margin-left: 5px;
+  text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+  padding: .5em 1em;
+  outline: none;
+  border-radius: 3px;
+  background: linear-gradient(rgb(110,112,120), rgb(81,81,86)) rgb(110,112,120);
+  box-shadow:
+  0 1px rgba(255,255,255,.2) inset,
+  0 3px 5px rgba(0,1,6,.5),
+  0 0 1px 1px rgba(0,1,6,.2);
+  transition: .2s ease-in-out;" onclick="searchTask()"> Find </button>
+  </div>
+  <div id="table">
+  </div>
+  `;
 
   var win_html5 = `<div id="devjora" style="cursor: -webkit-grab; display: flex; position: absolute; ">
   <input type="text" id="task_2" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
@@ -183,6 +205,9 @@ if( url.includes('skyeng.autofaq.ai')){
   wint4.onmouseup = function () {document.removeEventListener('mousemove', listener2);}
 
 
+  
+
+
   async function getInfo() {
     adr = document.location.href
     adr1 = document.location.pathname
@@ -213,29 +238,31 @@ if( url.includes('skyeng.autofaq.ai')){
     return [adr, adr1, sessionId]
   }}
 
-async function sendComment(txt){ 
-  var values = await getInfo(0)
-  adr = values[0]; adr1 = values[1]; uid = values[2]
-  var txt2 = txt.split('\n').join('\\n') //экранирование текста
-  var txt2 = txt2.split("\"").join("\\\"") //экранирование кавычек
-  fetch("https://skyeng.autofaq.ai/api/reason8/answers", {
-  "headers": {
-  "accept": "*/*",
-  "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
-  "cache-control": "max-age=0",
-  "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryH2CK1t5M3Dc3ziNW", //Показатель разделения строк
-  "sec-fetch-dest": "empty",
-  "sec-fetch-mode": "cors",
-  "sec-fetch-site": "same-origin"
-  },
-  "referrer": adr,
-  "referrerPolicy": "no-referrer-when-downgrade",
-  "body": "------WebKitFormBoundaryH2CK1t5M3Dc3ziNW\r\nContent-Disposition: form-data; name=\"payload\"\r\n\r\n{\"sessionId\":\"" + uid + "\",\"conversationId\":\"" + adr1 + "\",\"text\":\"" + txt2 + "\",\"isComment\":true}\r\n------WebKitFormBoundaryH2CK1t5M3Dc3ziNW--\r\n",
-  "method": "POST",
-  "mode": "cors",
-  "credentials": "include"
-  });
-}
+  async function sendComment(txt){ 
+    var values = await getInfo(0)
+    adr = values[0]; adr1 = values[1]; uid = values[2]
+    var txt2 = txt.split('\n').join('\\n') //экранирование текста
+    var txt2 = txt2.split("\"").join("\\\"") //экранирование кавычек
+    fetch("https://skyeng.autofaq.ai/api/reason8/answers", {
+    "headers": {
+    "accept": "*/*",
+    "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+    "cache-control": "max-age=0",
+    "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryH2CK1t5M3Dc3ziNW", //Показатель разделения строк
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin"
+    },
+    "referrer": adr,
+    "referrerPolicy": "no-referrer-when-downgrade",
+    "body": "------WebKitFormBoundaryH2CK1t5M3Dc3ziNW\r\nContent-Disposition: form-data; name=\"payload\"\r\n\r\n{\"sessionId\":\"" + uid + "\",\"conversationId\":\"" + adr1 + "\",\"text\":\"" + txt2 + "\",\"isComment\":true}\r\n------WebKitFormBoundaryH2CK1t5M3Dc3ziNW--\r\n",
+    "method": "POST",
+    "mode": "cors",
+    "credentials": "include"
+    });
+  }
+  
+
   
 
 
@@ -270,9 +297,39 @@ async function sendComment(txt){
             "credentials": "include"
           }); //Работает отлично, вот рекорд https://recordit.co/lvhOOVFr0O
         }
-
     }
   }
+    var search_button = document.getElementById("search_task")
+    search_button.onclick = searchTask;
+    function searchTask(){
+    var taskInput = document.getElementById("task");
+    var nameTask = taskInput.value;
+    if(nameTask == ""){
+      console.log("Введите поисковый запрос, пожалуйста");
+    }
+    else{
+      var ul2  =  document.getElementById("task");
+      var li2 = document.createElement("li");
+      li2.innerHTML = nameTask;
+      ul2.appendChild(li2);
+      console.log("Ты искал " + nameTask);
+      chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_task',id: nameTask}, function(response){
+          console.log("Ты нашел", response);
+          var N = response.length;
+          
+          for(var i=0; i<N; i++)
+          {
+            //здесь должна быть функция добавления каждой таски в таблицу
+          }
+          
+
+      });
+
+
+
+      taskInput.value = "";
+    }
+  }   
 }
 else{
   if(url.includes('crm2.skyeng.ru')){

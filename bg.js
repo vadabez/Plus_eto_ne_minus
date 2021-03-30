@@ -53,74 +53,39 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
 	}
 });
 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { //Функция отрисовки html в bg + get запрос
+  if (request.name === "Plus_eto_ne_minus") {
+      if (request.question == 'search_that_task') {
+          var requestText = request.id;
+          fetch("https://jira.skyeng.tech/issues/?jql=project in (MV, ADULT, VIM, SS, CRM2PB, MATH, ST, TS, VID) AND issuetype = Bug AND text~"+requestText+" AND resolution = Unresolved", {
+              mode: 'no-cors',
+              method: 'get',
+              credentials: "include"
+            })              
+            .then(response => response.text())
+            .then(text => { 
+              let page = document.createElement('html');
+              document.body.append(page);
+              page.innerHTML = text; //Эта функция успешно отрисовывает весь код в body bg проверено
+              
+              let issueKey = /data-issue-key="\w+[#\-]{0,1}\d{4,5}"/g; //Этот код ищет все таски через регулярные выражения, с учетом - букв и цифр
+              
+              let A2 = text.match(issueKey);
+              let B2 = A2[0].split("\"");
+              const array=[];
 
-// chrome.runtime.onMessage.addListener(function (request, supportTabNew, issueID, token, sender, sendResponse) { //Не работает
-//     if (request.name === "Plus_eto_ne_minus") {
-//         if (request.question == 'plus_support_tab') {
-//         fetch("https://jira.skyeng.tech/secure/AjaxIssueAction.jspa?decorator=none", {  
-//         "headers": {
-//             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-//                         },
-//             "body": `customfield_15410=${supportTabNew}&issueId=${issueID}&atl_token=${token}`, //https://jira.skyeng.tech/browse/VIM-11161/
-//             "method": "POST",
-//             "credentials": "include"
-//         })
-//          .then(response => response.text())
-//          .then(result => console.log(result))
-//         .catch(error => console.log('error', error))
-//     }
-//     return true;
-// };
-// });
+              for (var i = 0; i < A2.length; i++) {
+                  B2 = A2[i].split("\"");
+                  findIssue = B2[1];
+                  array.push(findIssue); //Добавление в массив новой таски
+                }
 
+              console.log("Ты искал в jira и нашел = ", array);
+              let response = array;
 
-
-
-
-
-/* Работает в 100% случае
-chrome.extension.onMessage.addListener(function(request){
-	if(request=='некий объект в фон') //проверяется, от того ли окна и скрипта отправлено
-		console.log('1. Принято: ', request);
+              sendResponse(response);
+            }).catch(error => console.log('error', error))
+            return true;
+       }
+    }
 });
-chrome.extension.onMessage.addListener(function(request, sender, f_callback){
-	if(request=='запрос backMsg'){ //проверяется, от того ли окна и скрипта отправлено
-		console.log('2. прошло через фон: ', request);
-		f_callback('backMsg'); //обратное сообщение
-	}
-});*/
-
-// chrome.extension.onMessage.addListener(function(request, sender, sendResponse){
-// 	if(request.name === 'Plus_eto_ne_minus') {
-//         if (request.question == 'get_devjira') {
-//             (async () => {
-//                 let response = await fetch(request.id, {
-//                     mode: 'no-cors', method: 'get',credentials: "include", async: true
-//                 });
-                
-//                 response;
-                
-
-//                 let text = await response.text(); // прочитать тело ответа как текст
-//                 if (response.status == 200) {
-//                     let page = document.createElement('html');
-//                     page.innerHTML = text;
-
-//                     let findissueID = text.getElementById("key-val");
-
-//                     if (findissueID!=null) {
-//                         var issueID;
-//                         issueID = findissueID.getAttribute('rel');
-//                         console.log("Я нашел твой IssueID через фон =",issueID );
-//                     } 
-//                     else {
-//                         console.log('Status != 200');
-//                         sendResponse(response);
-//                         };
-//                         sendResponse(response);
-//                 } 
-//             });
-//             return true;
-//         }
-//     }
-// })
