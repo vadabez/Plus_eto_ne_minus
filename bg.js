@@ -72,14 +72,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
               
               let A2 = text.match(issueKey);
               let B2 = A2[0].split("\"");
+
               const array=[];
 
-              for (var i = 0; i < A2.length; i++) {
+              for (var i = 0; i < A2.length; i=i+3) { //Специально увеличиваю цикл на 3, чтобы избежать повторений
                   B2 = A2[i].split("\"");
                   findIssue = B2[1];
                   array.push(findIssue); //Добавление в массив новой таски
                 }
-
+              
               console.log("Ты искал в jira и нашел = ", array);
               let response = array;
 

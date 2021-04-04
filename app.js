@@ -151,7 +151,7 @@ style="
   0 0 1px 1px rgba(0,1,6,.2);
   transition: .2s ease-in-out;" onclick="searchTask()"> Find </button>
   </div>
-  <div id="table">
+  <div id="tablediv">
   </div>
   `;
 
@@ -313,16 +313,28 @@ if( url.includes('skyeng.autofaq.ai')){
       li2.innerHTML = nameTask;
       ul2.appendChild(li2);
       console.log("Ты искал " + nameTask);
-      chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_task',id: nameTask}, function(response){
+      chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_task',id: nameTask}, function(response){ var table = `
+        <table id="table" style="color: white; text-align:center; width: 310px; max-height: 200px; margin-top: 40px;border:1px solid white;">
+        <tr>
+          <th> Таска в jira</th>
+        </tr>
+        <tr id="table1" style="border:1px solid white;">
+          
+        </tr>
+        </table>`
           console.log("Ты нашел", response);
           var N = response.length;
-          
+          var output="";
           for(var i=0; i<N; i++)
-          {
-            //здесь должна быть функция добавления каждой таски в таблицу
-          }
-          
-
+            { 
+              output+="<tr>"+ response[i] + "</tr>";
+              output+="<br>"
+            }
+      
+          let taskTable = document.getElementById("tablediv");
+          taskTable.innerHTML= table;
+          task1line = document.getElementById("table1");
+          task1line.innerHTML =output;
       });
 
 
