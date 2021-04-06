@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
   if (request.name === "Plus_eto_ne_minus") {
       if (request.question == 'search_that_task') {
           var requestText = request.id;
-          fetch("https://jira.skyeng.tech/issues/?jql=project in (MV, ADULT, VIM, SS, CRM2PB, MATH, ST, TS, VID) AND issuetype = Bug AND text~"+requestText+" AND resolution = Unresolved", {
+          fetch("https://jira.skyeng.tech/issues/?jql=project%20in%20(VIM%2C%20MV%2C%20KGL%2C%20SS%2C%20ADULT%2C%20CRM2PB%2C%20DSTR%2C%20KG%2C%20C0%2C%20MATH%2C%20ST%2C%20TS%2C%20VID)%20AND%20issuetype%20in%20(Bug%2C%20Epic)%20AND%20resolution%20%3D%20Unresolved%20AND%20text~"+requestText, {
               mode: 'no-cors',
               method: 'get',
               credentials: "include"
@@ -83,10 +83,40 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
               
               console.log("Ты искал в jira и нашел = ", array);
               let response = array;
-
               sendResponse(response);
             }).catch(error => console.log('error', error))
             return true;
        }
     }
 });
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { //Функция отрисовки html в bg + get запрос
+  if (request.name === "Plus_eto_ne_minus") {
+      if (request.question == 'search_that_summary') {
+          var nameTask = request.id;
+          fetch("https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project+in+%28VIM%2C+MV%2C+KGL%2C+SS%2C+ADULT%2C+CRM2PB%2C+DSTR%2C+KG%2C+C0%2C+MATH%2C+ST%2C+TS%2C+VID%29+AND+issuetype+%3D+Bug+AND+resolution+%3D+Unresolved+AND+text+%7E+%22"+nameTask+"%22+ORDER+BY+priority+ASC", {
+            mode: 'no-cors',
+            method: 'get',
+            credentials: "include"
+          })              
+          .then(response => response.text())
+          .then((data) => {
+            
+            let page = document.createElement('html');
+                document.body.append(page);
+                page.innerHTML = data;
+                
+                var findTable = document.getElementById("issuetable").innerHTML;// Найдем таблицу на странице
+
+
+
+                console.log(findTable);
+                
+                let responсe = findTable;
+                sendResponse(responсe);  
+          })
+          
+          return true;
+      }
+  }
+});   

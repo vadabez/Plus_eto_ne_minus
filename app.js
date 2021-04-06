@@ -151,7 +151,9 @@ style="
   0 0 1px 1px rgba(0,1,6,.2);
   transition: .2s ease-in-out;" onclick="searchTask()"> Find </button>
   </div>
-  <div id="tablediv">
+  <div>
+    <table id="tablediv">
+    </table>
   </div>
   `;
 
@@ -313,33 +315,20 @@ if( url.includes('skyeng.autofaq.ai')){
       li2.innerHTML = nameTask;
       ul2.appendChild(li2);
       console.log("Ты искал " + nameTask);
-      chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_task',id: nameTask}, function(response){ var table = `
-        <table id="table" style="color: white; text-align:center; width: 310px; max-height: 200px; margin-top: 40px;border:1px solid white;">
-        <tr>
-          <th> Таска в jira</th>
-        </tr>
-        <tr id="table1" style="border:1px solid white;">
-          
-        </tr>
-        </table>`
-          console.log("Ты нашел", response);
-          var N = response.length;
-          var output="";
-          for(var i=0; i<N; i++)
-            { 
-              output+="<tr>"+ response[i] + "</tr>";
-              output+="<br>"
-            }
+          chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_summary',id: nameTask}, function(responсe){
+            console.log("Summary таски = ", responсe);
+            var table = document.getElementById("tablediv");
+            table.style = 'color:white; overflow: scroll; background-color:black; width: 305px;';
+            table.innerHTML = responсe; 
+            table.children[0].style=`display: block;
+            margin-top: 50px;`;
+            table.children[1].style=`display: block;
+            overflow: scroll;
+            height: 417px;`;
+          });  
       
-          let taskTable = document.getElementById("tablediv");
-          taskTable.innerHTML= table;
-          task1line = document.getElementById("table1");
-          task1line.innerHTML =output;
-      });
-
-
-
       taskInput.value = "";
+      
     }
   }   
 }
