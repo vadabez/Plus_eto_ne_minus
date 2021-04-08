@@ -1,20 +1,7 @@
 var clicks = 0;
 var jiraSupportTab;
 
-let mstl = document.createElement('style');
-document.body.append(mstl);
-var style = `button:hover:not(:active) {
-  background: linear-gradient(rgb(126,126,134), rgb(70,71,76)) rgb(126,126,134);
-}
 
-button:active {
-  top: 1px;
-  background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
-  box-shadow:
-   0 0 1px rgba(0,0,0,.5) inset,
-   0 2px 3px rgba(0,0,0,.5) inset,
-   0 1px 1px rgba(255,255,255,.1);
-}`;
 
 function plusClick() {
   clicks += 1;
@@ -113,7 +100,7 @@ style="
   </div>`;
   
   var win_html4 = `<div id="devjira" style="background-color: black; cursor: -webkit-grab; display: flex; position: absolute; ">
-  <input type="text" id="task" style="border-color: black;" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
+  <input type="text" id="task" style="width: 196px;  border-color: black;" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
   <button id="btn_1" type="button" style="
   position: relative;
   display: inline-block;
@@ -130,6 +117,7 @@ style="
   0 1px rgba(255,255,255,.2) inset,
   0 3px 5px rgba(0,1,6,.5),
   0 0 1px 1px rgba(0,1,6,.2);
+  margin-left: 5px;
   transition: .2s ease-in-out;" onclick="handleButtonClick3()"> +1 </button>
 
   <button id="search_task" type="button" style="
@@ -151,7 +139,9 @@ style="
   0 0 1px 1px rgba(0,1,6,.2);
   transition: .2s ease-in-out;" onclick="searchTask()"> Find </button>
   </div>
-  <div>
+  <div id="divon">
+  </div>
+  <div style="overflow: hidden;">
     <table id="tablediv">
     </table>
   </div>
@@ -189,7 +179,7 @@ if( url.includes('skyeng.autofaq.ai')){
   
   let wint4 = document.createElement('div');
   document.body.append(wint4);
-  wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20;';
+  wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px';
   wint4.innerHTML = win_html4; 
 
   var listener2 = function(e , a) {
@@ -316,15 +306,68 @@ if( url.includes('skyeng.autofaq.ai')){
       ul2.appendChild(li2);
       console.log("Ты искал " + nameTask);
           chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_summary',id: nameTask}, function(responсe){
-            console.log("Summary таски = ", responсe);
+            
             var table = document.getElementById("tablediv");
-            table.style = 'color:white; overflow: scroll; background-color:black; width: 305px;';
+            table.style = `color:white; background-color:black; width: 305px; padding-right: 0px; overflow: hidden;`; 
             table.innerHTML = responсe; 
-            table.children[0].style=`display: block;
-            margin-top: 50px;`;
+            document.body.style.overflow = 'hidden';
+
+            table.children[0].style=`display: block; overflow: hidden;`;           
             table.children[1].style=`display: block;
-            overflow: scroll;
+            overflow-x: auto;
             height: 417px;`;
+            var buttonClose = `<button id="btn_close" type="button" style="
+            position: relative;
+            display: inline-block;
+            font-size: 15px;
+            font-weight: 700;
+            color: rgb(209,209,217);
+            text-decoration: none;
+            text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+            padding: .5em 1em;
+            outline: none;
+            border-radius: 3px;
+            background: linear-gradient(rgb(110,112,120), rgb(81,81,86)) rgb(110,112,120);
+            box-shadow:
+            0 1px rgba(255,255,255,.2) inset,
+            0 3px 5px rgba(0,1,6,.5),
+            0 0 1px 1px rgba(0,1,6,.2);
+            transition: .2s ease-in-out;
+            margin-top: 45px;" onclick="handleButtonClose()"> Close </button>`;
+
+            var issueLink = document.getElementsByClassName("issue-link");
+            var K = issueLink.length;
+            
+            for(i=0;i<K;i++){
+              issueLink[i].href ="#";
+              issueLink[i].onclick = function(evt){
+                let link = evt.target;
+                var textInput = document.getElementById("task");
+                textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
+                table.innerHTML = "";
+                table2.innerHTML ="";
+              }
+            }
+
+          //   document.addEventListener('click', function(evt){ // обработчик кликов привязан к document
+          //     if(evt.target.class = "issue-link"){ //если у нажатой кнопки есть класс issue-link
+          //     let link = evt.target;// тут передается значение нажатой ссылки
+          //     var textInput = document.getElementById("task");
+          //     textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
+          //     table.innerHTML = "";
+          //     table2.innerHTML ="";
+          //   }
+          // })
+
+            var table2 = document.getElementById("divon");
+            table2.innerHTML = buttonClose;
+
+            var button4 = document.getElementById("btn_close")
+            button4.onclick = handleButtonClose;
+            function handleButtonClose() {
+              table.innerHTML = "";
+              table2.innerHTML ="";
+            }
           });  
       
       taskInput.value = "";

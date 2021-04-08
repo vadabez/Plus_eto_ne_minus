@@ -94,11 +94,32 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
   if (request.name === "Plus_eto_ne_minus") {
       if (request.question == 'search_that_summary') {
           var nameTask = request.id;
-          fetch("https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project+in+%28VIM%2C+MV%2C+KGL%2C+SS%2C+ADULT%2C+CRM2PB%2C+DSTR%2C+KG%2C+C0%2C+MATH%2C+ST%2C+TS%2C+VID%29+AND+issuetype+%3D+Bug+AND+resolution+%3D+Unresolved+AND+text+%7E+%22"+nameTask+"%22+ORDER+BY+priority+ASC", {
+          var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project+in+%28VIM%2C+MV%2C+KGL%2C+SS%2C+ADULT%2C+CRM2PB%2C+DSTR%2C+KG%2C+C0%2C+MATH%2C+ST%2C+TS%2C+VID%29+AND+issuetype+%3D+Bug+AND+resolution+%3D+Unresolved+AND+text+%7E+%22"+nameTask+"%22+ORDER+BY+priority+ASC";
+          fetch("https://jira.skyeng.tech/rest/api/2/user/columns", {
+          "headers": {
+          "accept": "application/json, text/javascript, */*; q=0.01",
+          "accept-language": "ru,en-US;q=0.9,en;q=0.8,ru-RU;q=0.7",
+          "content-type": "application/json",
+          "sec-ch-ua": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-origin",
+          "x-requested-with": "XMLHttpRequest"
+          },
+          "referrer": day_djoby,
+          "referrerPolicy": "strict-origin-when-cross-origin",
+          "body": "{\"columns\":[\"issuekey\",\"summary\"]}",
+          "method": "PUT",
+          "mode": "cors",
+          "credentials": "include"
+        });
+          
+          fetch(day_djoby, {
             mode: 'no-cors',
             method: 'get',
             credentials: "include"
-          })              
+          })     
           .then(response => response.text())
           .then((data) => {
             
@@ -107,13 +128,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
                 page.innerHTML = data;
                 
                 var findTable = document.getElementById("issuetable").innerHTML;// Найдем таблицу на странице
-
-
-
-                console.log(findTable);
-                
                 let responсe = findTable;
-                sendResponse(responсe);  
+                sendResponse(responсe);
+                page.innerHTML ="";  
           })
           
           return true;

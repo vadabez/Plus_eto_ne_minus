@@ -13,7 +13,8 @@
     "content_scripts": [
         {
             "matches": [ "https://jira.skyeng.tech/*","*://skyeng.autofaq.ai/*", "https://crm2.skyeng.ru/*"],
-            "js": [ "app.js" ]
+            "js": [ "app.js" ],
+            "css": ["mystyles.css"]
         }
     ],
     "permissions": [
