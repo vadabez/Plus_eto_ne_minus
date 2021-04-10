@@ -113,13 +113,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
           "method": "PUT",
           "mode": "cors",
           "credentials": "include"
-        });
-          
+        })
+        .then(
           fetch(day_djoby, {
             mode: 'no-cors',
             method: 'get',
             credentials: "include"
-          })     
+          })   
           .then(response => response.text())
           .then((data) => {
             
@@ -129,11 +129,30 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
                 
                 var findTable = document.getElementById("issuetable").innerHTML;// Найдем таблицу на странице
                 let responсe = findTable;
-                sendResponse(responсe);
-                page.innerHTML ="";  
-          })
-          
-          return true;
+                page.innerHTML ="";
+                sendResponse(responсe); return true;})
+                
+                .then(()=>
+                  fetch("https://jira.skyeng.tech/rest/api/2/user/columns", {
+                  "headers": {
+                  "accept": "application/json, text/javascript, */*; q=0.01",
+                  "accept-language": "ru,en-US;q=0.9,en;q=0.8,ru-RU;q=0.7",
+                  "content-type": "application/json",
+                  "sec-ch-ua": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
+                  "sec-ch-ua-mobile": "?0",
+                  "sec-fetch-dest": "empty",
+                  "sec-fetch-mode": "cors",
+                  "sec-fetch-site": "same-origin",
+                  "x-requested-with": "XMLHttpRequest"
+                  },
+                  "referrer": day_djoby,
+                  "referrerPolicy": "strict-origin-when-cross-origin",
+                  "body": "{\"columns\":[\"issuetype\",\"issuekey\",\"summary\",\"resolution\",\"priority\",\"created\",\"assignee\",\"updated\"]}",
+                  "method": "PUT",
+                  "mode": "cors",
+                  "credentials": "include"
+                })));
+                return true;
       }
   }
 });   

@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Plus_eto_ne_minus",
-    "version": "1.2",
+    "version": "1.4",
     "description": "Добавляет +1 в Jira",
     "icons": {
         "128": "plus.png"
