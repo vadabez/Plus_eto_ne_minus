@@ -89,7 +89,6 @@ box-shadow:
 0 3px 5px rgba(0,1,6,.5),
 0 0 1px 1px rgba(0,1,6,.2);
 transition: .2s ease-in-out;" onclick="plusClick()"> Нажми на меня </button>
-
   <p 
     style="
     text-align: center;
@@ -98,15 +97,19 @@ transition: .2s ease-in-out;" onclick="plusClick()"> Нажми на меня </
     <a style="text-decoration: none; cursor: default;" id="clicks">0</a></p> 
   </div>`;
   
-  var win_html4 = `<div id="devjira" style="background-color: black; cursor: -webkit-grab; display: flex; position: absolute; ">
-  <input type="text" id="task" style="width: 196px;  border-color: black;" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
-  <button id="btn_1" type="button" class="btn_plus" onclick="handleButtonClick3()"> +1 </button>
-
-  <button id="search_task" type="button" class="btn_plus" onclick="searchTask()"> Find </button>
+  var win_html4 = `
+  <div id="devjira" style="background-color: black; cursor: -webkit-grab; display: flex; position: absolute; ">
+    <input type="text" id="task" style="width: 196px;  border-color: black;" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
+    <button id="btn_1" type="button" class="btn_plus" onclick="handleButtonClick3()"> +1 </button>
+    <button id="search_task" type="button" class="btn_plus" onclick="searchTask()"> Find </button>
   </div>
+  <div id="vimdox">
+   <button id="search_vim" type="button" class="btn_plus" onclick="searchVimTask()" style="
+    margin-top: 45px;"> Топ VIM таски </button>
+    </div>
   <div id="divon">
   </div>
-  <div style="overflow: hidden;">
+  <div class="tablediv">
     <table id="tablediv">
     </table>
   </div>
@@ -120,6 +123,7 @@ transition: .2s ease-in-out;" onclick="plusClick()"> Нажми на меня </
 var url = window.location.href;
 
 
+
 if( url.includes('skyeng.autofaq.ai')){
   if (localStorage.getItem('wint4TopAF') == null) {
     localStorage.setItem('wint4TopAF', '15');
@@ -130,6 +134,9 @@ if( url.includes('skyeng.autofaq.ai')){
   document.body.append(wint4);
   wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px';
   wint4.innerHTML = win_html4; 
+
+
+
 
   var listener2 = function(e , a) {
     wint4.style.left = Number(e.clientX - myX2) + "px";
@@ -203,9 +210,71 @@ if( url.includes('skyeng.autofaq.ai')){
     });
   }
   
+  var buttonVim = document.getElementById("search_vim")
+  buttonVim.onclick = searchVimTask;
+  function searchVimTask() {
+    chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_vim'}, function(responсe){
+      var table = document.getElementById("tablediv");
+      table.style = `color:white; background-color:black; width: 305px; padding-right: 0px;`; 
+      table.innerHTML = responсe;
+      var divon =document.getElementById("divon");
+      divon.style ="margin-top:-41px;"
+      table.children[0].style=`display: block; overflow: hidden;`;           
+      table.children[1].style=`display: block;
+      overflow-x: auto;
+      height: 417px;`;
+      var buttonClose = `<button id="btn_close" type="button" class="btn_plus" style="margin-top: 45px;" onclick="handleButtonClose()"> Close </button>`;
 
-  
+      wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 516px';
+      var issueLink = document.getElementsByClassName("issue-link");
+      var K = issueLink.length;
+      for(i=0;i<K;i++){
+          issueLink[i].href ="#";
+          issueLink[i].onclick = function(evt){
+            let link = evt.target;
+            var textInput = document.getElementById("task");
+            textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
 
+            table.innerHTML = "";
+            table2.innerHTML ="";
+            wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px;';
+            divVim.style.background="black";
+          } 
+      }
+      var table2 = document.getElementById("divon");
+      table2.innerHTML = buttonClose;
+      var divVim= document.getElementById("vimdox");
+      
+      var buttonC = document.getElementById("btn_close")
+      buttonC.onclick = handleButtonClose;
+      function handleButtonClose() {
+        table.innerHTML = "";
+        table2.innerHTML ="";
+        var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project%3DVIM%20AND%20issuetype%3DBug%20AND%20status!%3DClosed%20AND%20Reports!%3DEMPTY%20ORDER%20BY%20cf%5B15410%5D%20DESC";
+          fetch("https://jira.skyeng.tech/rest/api/2/user/columns", {
+          "headers": {
+          "accept": "application/json, text/javascript, */*; q=0.01",
+          "accept-language": "ru,en-US;q=0.9,en;q=0.8,ru-RU;q=0.7",
+          "content-type": "application/json",
+          "sec-ch-ua": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-origin",
+          "x-requested-with": "XMLHttpRequest"
+          },
+          "referrer": day_djoby,
+          "referrerPolicy": "strict-origin-when-cross-origin",
+          "body": "{\"columns\":[\"issuetype\",\"issuekey\",\"summary\",\"resolution\",\"priority\",\"created\",\"assignee\",\"updated\"]}",
+          "method": "PUT",
+          "mode": "cors",
+          "credentials": "include"
+        });
+        wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px;';
+        divVim.style.background="black";
+      }
+    })
+  }
 
 
   var button2 = document.getElementById("btn_1")
@@ -251,7 +320,6 @@ if( url.includes('skyeng.autofaq.ai')){
         else{
           if((nameTask == "Беззуб")||(nameTask == "беззуб")){
             console.log("Ого, ты нашел пасхалку MADE BY", nameTask);
-
           }
           else{
           var ul2  =  document.getElementById("task");
@@ -261,28 +329,30 @@ if( url.includes('skyeng.autofaq.ai')){
               chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_summary',id: nameTask}, function(responсe){
             
               var table = document.getElementById("tablediv");
-              table.style = `color:white; background-color:black; width: 305px; padding-right: 0px; overflow: hidden;`; 
+              table.style = `color:white; background-color:black; width: 305px; padding-right: 0px;`; 
               table.innerHTML = responсe; 
-              document.body.style.overflow = 'hidden';
+              
 
-              table.children[0].style=`display: block; overflow: hidden;`;           
+              table.children[0].style=`display: block;`;           
               table.children[1].style=`display: block;
               overflow-x: auto;
               height: 417px;`;
               var buttonClose = `<button id="btn_close" type="button" class="btn_plus" style="margin-top: 45px;" onclick="handleButtonClose()"> Close </button>`;
+              
+              
+
 
               var issueLink = document.getElementsByClassName("issue-link");
               var K = issueLink.length;
-            
               for(i=0;i<K;i++){
-                issueLink[i].href ="#";
-                issueLink[i].onclick = function(evt){
-                  let link = evt.target;
-                  var textInput = document.getElementById("task");
-                  textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
-                  table.innerHTML = "";
-                  table2.innerHTML ="";
-                }
+                  issueLink[i].href ="#";
+                  issueLink[i].onclick = function(evt){
+                    let link = evt.target;
+                    var textInput = document.getElementById("task");
+                    textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
+                    table.innerHTML = "";
+                    table2.innerHTML ="";
+                  } 
               }
               var table2 = document.getElementById("divon");
               table2.innerHTML = buttonClose;
