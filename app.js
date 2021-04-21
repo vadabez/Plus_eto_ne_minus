@@ -98,22 +98,20 @@ transition: .2s ease-in-out;" onclick="plusClick()"> Нажми на меня </
   </div>`;
   
   var win_html4 = `
-  <div id="devjira" style="background-color: black; cursor: -webkit-grab; display: flex; position: absolute; ">
+  <div id="devjira" style="background-color: black; width: 330px; cursor: -webkit-grab; display: flex; position: absolute; ">
     <input type="text" id="task" style="width: 196px;  border-color: black;" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
     <button id="btn_1" type="button" class="btn_plus" onclick="handleButtonClick3()"> +1 </button>
-    <button id="search_task" type="button" class="btn_plus" onclick="searchTask()"> Find </button>
+    <button id="search_task" type="button" class="btn_plus" onclick="searchTask()"> &#128270;	 </button>
+    <button id="more" type="button" class="btn_plus" > V </button>
   </div>
-  <div id="vimdox">
-   <button id="search_vim" type="button" class="btn_plus" onclick="searchVimTask()" style="
-    margin-top: 45px;"> Топ VIM таски </button>
-    </div>
+  <div id="vimdox" style=" width: 330px;">
+  </div>
   <div id="divon">
   </div>
   <div class="tablediv">
     <table id="tablediv">
     </table>
-  </div>
-  `;
+  </div>  `;
 
   var win_html5 = `<div id="devjora" style="cursor: -webkit-grab; display: flex; position: absolute; ">
   <input type="text" id="task_2" placeholder="Напиши таску в jira здесь" onfocus="clearField(this);" > </input>
@@ -121,6 +119,8 @@ transition: .2s ease-in-out;" onclick="plusClick()"> Нажми на меня </
   </div>`;
 
 var url = window.location.href;
+
+
 
 
 
@@ -132,7 +132,7 @@ if( url.includes('skyeng.autofaq.ai')){
   
   let wint4 = document.createElement('div');
   document.body.append(wint4);
-  wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px';
+  wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 330px';
   wint4.innerHTML = win_html4; 
 
 
@@ -185,7 +185,7 @@ if( url.includes('skyeng.autofaq.ai')){
   .then(a => b = a.json()).then(b => {sessionId = b.sessionId; localStorage.setItem('serviceIdGlob', b.serviceId)});
     return [adr, adr1, sessionId]
   }}
-
+ 
   async function sendComment(txt){ 
     var values = await getInfo(0)
     adr = values[0]; adr1 = values[1]; uid = values[2]
@@ -209,72 +209,221 @@ if( url.includes('skyeng.autofaq.ai')){
     "credentials": "include"
     });
   }
-  
-  var buttonVim = document.getElementById("search_vim")
-  buttonVim.onclick = searchVimTask;
-  function searchVimTask() {
-    chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_vim'}, function(responсe){
-      var table = document.getElementById("tablediv");
-      table.style = `color:white; background-color:black; width: 305px; padding-right: 0px;`; 
-      table.innerHTML = responсe;
-      var divon =document.getElementById("divon");
-      divon.style ="margin-top:-41px;"
-      table.children[0].style=`display: block; overflow: hidden;`;           
-      table.children[1].style=`display: block;
-      overflow-x: auto;
-      height: 417px;`;
-      var buttonClose = `<button id="btn_close" type="button" class="btn_plus" style="margin-top: 45px;" onclick="handleButtonClose()"> Close </button>`;
 
-      wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 516px';
-      var issueLink = document.getElementsByClassName("issue-link");
-      var K = issueLink.length;
-      for(i=0;i<K;i++){
-          issueLink[i].href ="#";
-          issueLink[i].onclick = function(evt){
-            let link = evt.target;
-            var textInput = document.getElementById("task");
-            textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
+var vimdox = ` 
+<div id="button1" style="display:inline-block;">
+  <button id="search_vim" type="button" class="btn_plus" onclick="searchVimTask()" style="
+    margin-top: 40px;"> Top VIM bugs </button>
+</div>
+<div id="button2" style="display:inline-block;">
+   <button id="search_last_vim" type="button" class="btn_plus" onclick="searchLastVimTask()"> VIM New Bugs </button>
+</div>
+<div id="button3" style="display:inline-block;">
+   <button id="search_recently_task" type="button" class="btn_plus" onclick="searchRecentlyTask()" style="
+    margin-top: 10px;"> Resently updated bugs </button>
+</div>
+<div id="button4" style="display:inline-block;margin-top: 6px;">
+   <button id="more_close" type="button" style="margin-left: 115px;" class="btn_plus"> ^ </button>
+</div>
+<div id="button5" style="display:inline-block;margin-top: 6px;">  
+    <button id="steal" type="button" onclick="grabitKaravany()" class="btn_plus" style="
+    margin-left: 87px;"> ГРАБИТЬ КАРАВАНЫ </button>
+    </div>`;
 
-            table.innerHTML = "";
-            table2.innerHTML ="";
-            wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px;';
-            divVim.style.background="black";
-          } 
-      }
-      var table2 = document.getElementById("divon");
-      table2.innerHTML = buttonClose;
-      var divVim= document.getElementById("vimdox");
+var buttonMore = document.getElementById("more");
+buttonMore.onclick = more;
+function more() {
+ var expand = document.getElementById("vimdox");
+ expand.innerHTML = vimdox;
+ chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'columns_jira'});
+
+
+ var buttonGrabit = document.getElementById("steal");
+ buttonGrabit.onclick = grabitKaravany;
+ var caravany =0;
+ function grabitKaravany() {
+  caravany++;
+
+  var table = document.getElementById("tablediv");
+    table.style = `color:white; background-color:black; width: 305px; padding-right: 0px; margin-top: 48px;`; 
+    wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 335px;';
+    table.innerHTML = `<p>Ты ограбил вот столько караванов:${caravany}</p>`;
+ }
+
+
+//Блок для функции добавления списка самых топовых тасок VIM
+
+var buttonVim = document.getElementById("search_vim")
+buttonVim.onclick = searchVimTask;
+function searchVimTask() {
+  chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_vim'}, function(responсe){
+    chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'columns_jira'});
+    var table = document.getElementById("tablediv");
+    table.style = `color:white; background-color:black; width: 305px; padding-right: 0px;`; 
+    table.innerHTML = responсe;
+    var divon =document.getElementById("divon");
+    divon.style ="margin-top:-41px;"
+    table.children[0].style=`display: block; overflow: hidden;`;           
+    table.children[1].style=`display: block;
+    overflow-x: auto;
+    height: 417px;
+    width: 552px;`;
+    var buttonClose = `<button id="btn_close" type="button" class="btn_plus" style="margin-top: 45px;" onclick="handleButtonClose()"> Close </button>`;
+    var divVim= document.getElementById("vimdox");
+    
+
+    wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 555px';
+    var issueLink = document.getElementsByClassName("issue-link");
+    var K = issueLink.length;
+    for(i=0;i<K;i++){
+        issueLink[i].href ="#";
+        issueLink[i].onclick = function(evt){
+          let link = evt.target;
+          var textInput = document.getElementById("task");
+          textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
+
+          table.innerHTML = "";
+          table2.innerHTML ="";
+          
+          wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 330px;';
+          divVim.style.background="black";
+        } 
+    }
+    var table2 = document.getElementById("divon");
+    table2.innerHTML = buttonClose;
+    
+    var buttonC = document.getElementById("btn_close")
+    buttonC.onclick = handleButtonClose;
+    function handleButtonClose() {
+      table.innerHTML = "";
+      table2.innerHTML ="";
       
-      var buttonC = document.getElementById("btn_close")
-      buttonC.onclick = handleButtonClose;
-      function handleButtonClose() {
-        table.innerHTML = "";
-        table2.innerHTML ="";
-        var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project%3DVIM%20AND%20issuetype%3DBug%20AND%20status!%3DClosed%20AND%20Reports!%3DEMPTY%20ORDER%20BY%20cf%5B15410%5D%20DESC";
-          fetch("https://jira.skyeng.tech/rest/api/2/user/columns", {
-          "headers": {
-          "accept": "application/json, text/javascript, */*; q=0.01",
-          "accept-language": "ru,en-US;q=0.9,en;q=0.8,ru-RU;q=0.7",
-          "content-type": "application/json",
-          "sec-ch-ua": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
-          "sec-ch-ua-mobile": "?0",
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin",
-          "x-requested-with": "XMLHttpRequest"
-          },
-          "referrer": day_djoby,
-          "referrerPolicy": "strict-origin-when-cross-origin",
-          "body": "{\"columns\":[\"issuetype\",\"issuekey\",\"summary\",\"resolution\",\"priority\",\"created\",\"assignee\",\"updated\"]}",
-          "method": "PUT",
-          "mode": "cors",
-          "credentials": "include"
-        });
-        wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px;';
-        divVim.style.background="black";
-      }
-    })
-  }
+      wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 330px;';
+      divVim.style.background="black";
+    }
+  })
+}
+
+
+//Блок для добавления функции получения списка самых последних тасок в VIM 
+
+var buttonVim = document.getElementById("search_last_vim")
+buttonVim.onclick = searchLastVimTask;
+function searchLastVimTask() {
+  chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_that_last_vim'}, function(responсe){
+    chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'columns_jira'});
+    var table = document.getElementById("tablediv");
+    table.style = `color:white; background-color:black; width: 305px; padding-right: 0px;`; 
+    table.innerHTML = responсe;
+    var divon =document.getElementById("divon");
+    divon.style ="margin-top:-41px;"
+    table.children[0].style=`display: block; overflow: hidden;`;           
+    table.children[1].style=`display: block;
+    overflow-x: auto;
+    height: 417px;
+    width: 552px;`;
+    var buttonClose = `<button id="btn_close" type="button" class="btn_plus" style="margin-top: 45px;" onclick="handleButtonClose()"> Close </button>`;
+    var divVim= document.getElementById("vimdox");
+    
+    wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 555px;';
+    var issueLink = document.getElementsByClassName("issue-link");
+    var K = issueLink.length;
+    for(i=0;i<K;i++){
+        issueLink[i].href ="#";
+        issueLink[i].onclick = function(evt){
+          let link = evt.target;
+          var textInput = document.getElementById("task");
+          textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
+
+          table.innerHTML = "";
+          table2.innerHTML ="";
+          
+          wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 335px;';
+          divVim.style.background="black";
+        } 
+    }
+    var table2 = document.getElementById("divon");
+    table2.innerHTML = buttonClose;
+    
+    
+    var buttonC = document.getElementById("btn_close")
+    buttonC.onclick = handleButtonClose;
+    function handleButtonClose() {
+      table.innerHTML = "";
+      table2.innerHTML ="";
+      
+      wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px;';
+      divVim.style.background="black";
+    }
+  })
+}
+
+//Блок для добавления функции получения списка недавно обновленных 
+
+var buttonRecently = document.getElementById("search_recently_task")
+buttonRecently.onclick = searchRecentlyTask;
+function searchRecentlyTask() { 
+  chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'search_recently_task'}, function(responсe){
+    chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'columns_jira'});
+    var table = document.getElementById("tablediv");
+    table.style = `color:white; background-color:black; width: 305px; padding-right: 0px;`; 
+    table.innerHTML = responсe;
+    var divon =document.getElementById("divon");
+    divon.style ="margin-top:-41px;"
+    table.children[0].style=`display: block; overflow: hidden;`;           
+    table.children[1].style=`display: block;
+    overflow-x: auto;
+    height: 417px;
+    width: 580px;`;
+    var buttonClose = `<button id="btn_close" type="button" class="btn_plus" style="margin-top: 45px;" onclick="handleButtonClose()"> Close </button>`;
+    var divVim= document.getElementById("vimdox");
+
+    wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 582px;';
+    var issueLink = document.getElementsByClassName("issue-link");
+    var K = issueLink.length;
+    for(i=0;i<K;i++){
+        issueLink[i].href ="#";
+        issueLink[i].onclick = function(evt){
+          let link = evt.target;
+          var textInput = document.getElementById("task");
+          textInput.value ="https://jira.skyeng.tech/browse/"+link.innerText;
+
+          table.innerHTML = "";
+          table2.innerHTML ="";
+          
+          wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px;';
+          divVim.style.background="black";
+        } 
+    }
+    var table2 = document.getElementById("divon");
+    table2.innerHTML = buttonClose;
+    
+    
+    var buttonC = document.getElementById("btn_close")
+    buttonC.onclick = handleButtonClose;
+    function handleButtonClose() {
+      table.innerHTML = "";
+      table2.innerHTML ="";
+      
+      wint4.style = 'height: onresize(); width: onresize();  background: wheat; top: ' + localStorage.getItem('wint4TopAF') + 'px; left: ' + localStorage.getItem('wint4LeftAF') + 'px;   font-size: 15px; font-weight: bold; border: 1px solid rgb(56, 56, 56); color: black;position: absolute; background: black;z-index:20; width: 320px;';
+      divVim.style.background="black";
+    }
+  })
+}
+
+  var buttonMoreClose = document.getElementById("more_close");
+  buttonMoreClose.onclick = more_close;
+  function more_close() {
+    var expand = document.getElementById("vimdox");
+    var vimdox ='';
+    expand.innerHTML = vimdox;
+    chrome.runtime.sendMessage({name: "Plus_eto_ne_minus",question: 'close_columns_jira'});
+  };
+};
+
+
+
+  
 
 
   var button2 = document.getElementById("btn_1")
@@ -336,7 +485,7 @@ if( url.includes('skyeng.autofaq.ai')){
               table.children[0].style=`display: block;`;           
               table.children[1].style=`display: block;
               overflow-x: auto;
-              height: 417px;`;
+              height: 417px;  `;
               var buttonClose = `<button id="btn_close" type="button" class="btn_plus" style="margin-top: 45px;" onclick="handleButtonClose()"> Close </button>`;
               
               

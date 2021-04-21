@@ -2,7 +2,7 @@
 .btn_plus{
   position: relative;
   display: inline-block;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 700;
   color: rgb(209,209,217);
   text-decoration: none;
@@ -17,6 +17,7 @@
   0 3px 5px rgba(0,1,6,.5),
   0 0 1px 1px rgba(0,1,6,.2);
   transition: .2s ease-in-out;
+  z-index:21;
 }
 
 .btn_plus:hover:not(:active) {
@@ -32,8 +33,22 @@
      0 1px 1px rgba(255,255,255,.1);
   }
 
-.tablediv::-webkit-scrollbar {
-    width: 0px !important;
-} 
-
-
+  ::-webkit-scrollbar-track
+  {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+  }
+  
+  ::-webkit-scrollbar
+  {
+    width: 12px;
+    background-color: #F5F5F5;
+  }
+  
+  ::-webkit-scrollbar-thumb
+  {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #3b3838;
+  }

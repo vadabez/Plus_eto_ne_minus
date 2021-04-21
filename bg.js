@@ -160,7 +160,61 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { //Функция отрисовки html в bg + get запрос
   if (request.name === "Plus_eto_ne_minus") {
       if (request.question == 'search_that_vim') {
-          var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project%3DVIM%20AND%20issuetype%3DBug%20AND%20status!%3DClosed%20AND%20Reports!%3DEMPTY%20ORDER%20BY%20cf%5B15410%5D%20DESC";
+          var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project+%3D+VIM+AND+issuetype+%3D+Bug+AND+status+%21%3D+Closed+AND+Reports+%21%3D+EMPTY+ORDER+BY+cf%5B15410%5D+DESC";
+          
+          fetch(day_djoby, {
+            mode: 'no-cors',
+            method: 'get',
+            credentials: "include"
+          })   
+          .then(response => response.text())
+          .then((data) => {
+            
+            let page = document.createElement('html');
+                document.body.append(page);
+                page.innerHTML = data;
+                
+                var findTable = document.getElementById("issuetable").innerHTML;// Найдем таблицу на странице
+                let responсe = findTable;
+                page.innerHTML ="";
+                sendResponse(responсe); })                          
+      }
+      return true;
+  }
+});   
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { //Функция отрисовки html в bg + get запрос
+  if (request.name === "Plus_eto_ne_minus") {
+      if (request.question == 'search_that_last_vim') {
+          var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project%20in%20(%22Vimbox%20Platform%22%2C%20%22Video%20Platform%22%2C%20%22Student%20Cabinet%22)%20AND%20issuetype%20%3D%20Bug%20AND%20status%20!%3D%20Closed%20AND%20created%20%3E%3D%20-4w%20ORDER%20BY%20created%20DESC%2C%20cf%5B11107%5D%20ASC";
+          
+        
+          fetch(day_djoby, {
+            mode: 'no-cors',
+            method: 'get',
+            credentials: "include"
+          })   
+          .then(response => response.text())
+          .then((data) => {
+            
+            let page = document.createElement('html');
+                document.body.append(page);
+                page.innerHTML = data;
+                
+                var findTable = document.getElementById("issuetable").innerHTML;// Найдем таблицу на странице
+                let responсe = findTable;
+                page.innerHTML ="";
+                sendResponse(responсe); });                           
+      }
+      return true;
+  }
+}); 
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { //Функция отрисовки html в bg + get запрос
+  if (request.name === "Plus_eto_ne_minus") {
+      if (request.question == 'columns_jira') {
+          var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project%20in%20(TS%2C%20VIM%2C%20BILL%2C%20CONV%2C%20DSTR%2C%20EDU%2C%20KGL%2C%20KIDS%2C%20C0%2C%20ST%2C%20STUDCAB)%20AND%20issuetype%20%3D%20Bug%20AND%20resolution%20%3D%20Unresolved%20AND%20updated%20>%3D%20-1w%20ORDER%20BY%20updated%20DESC";
           fetch("https://jira.skyeng.tech/rest/api/2/user/columns", {
           "headers": {
           "accept": "application/json, text/javascript, */*; q=0.01",
@@ -179,8 +233,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
           "method": "PUT",
           "mode": "cors",
           "credentials": "include"
-        })
-        .then(
+        });
+      };
+    };
+  });
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { //Функция отрисовки html в bg + get запрос
+  if (request.name === "Plus_eto_ne_minus") {
+      if (request.question == 'search_recently_task') {
+          var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project%20in%20(TS%2C%20VIM%2C%20BILL%2C%20CONV%2C%20DSTR%2C%20EDU%2C%20KGL%2C%20KIDS%2C%20C0%2C%20ST%2C%20STUDCAB)%20AND%20issuetype%20%3D%20Bug%20AND%20resolution%20%3D%20Unresolved%20AND%20updated%20>%3D%20-1w%20ORDER%20BY%20updated%20DESC";
+          
           fetch(day_djoby, {
             mode: 'no-cors',
             method: 'get',
@@ -196,35 +259,36 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
                 var findTable = document.getElementById("issuetable").innerHTML;// Найдем таблицу на странице
                 let responсe = findTable;
                 page.innerHTML ="";
-                sendResponse(responсe); }))                          
+                sendResponse(responсe); });                
       }
-      return true;
+      return true; 
   }
-});   
+});
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { //Функция отрисовки html в bg + get запрос
   if (request.name === "Plus_eto_ne_minus") {
-      if (request.question == 'close_that_vim') {
-          var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project%3DVIM%20AND%20issuetype%3DBug%20AND%20status!%3DClosed%20AND%20Reports!%3DEMPTY%20ORDER%20BY%20cf%5B15410%5D%20DESC";
-          fetch("https://jira.skyeng.tech/rest/api/2/user/columns", {
-          "headers": {
-          "accept": "application/json, text/javascript, */*; q=0.01",
-          "accept-language": "ru,en-US;q=0.9,en;q=0.8,ru-RU;q=0.7",
-          "content-type": "application/json",
-          "sec-ch-ua": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
-          "sec-ch-ua-mobile": "?0",
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin",
-          "x-requested-with": "XMLHttpRequest"
-          },
-          "referrer": day_djoby,
-          "referrerPolicy": "strict-origin-when-cross-origin",
-          "body": "{\"columns\":[\"issuetype\",\"issuekey\",\"summary\",\"resolution\",\"priority\",\"created\",\"assignee\",\"updated\"]}",
-          "method": "PUT",
-          "mode": "cors",
-          "credentials": "include"
-        })
+      if (request.question == 'close_columns_jira') {
+        var day_djoby = "https://jira.skyeng.tech/sr/jira.issueviews:searchrequest-html-current-fields/temp/SearchRequest.html?jqlQuery=project+%3D+VIM+AND+issuetype+%3D+Bug+AND+status+%21%3D+Closed+AND+Reports+%21%3D+EMPTY+ORDER+BY+cf%5B15410%5D+DESC";
+        fetch("https://jira.skyeng.tech/rest/api/2/user/columns", {
+        "headers": {
+        "accept": "application/json, text/javascript, */*; q=0.01",
+        "accept-language": "ru,en-US;q=0.9,en;q=0.8,ru-RU;q=0.7",
+        "content-type": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "x-requested-with": "XMLHttpRequest"
+        },
+        "referrer": day_djoby,
+        "referrerPolicy": "strict-origin-when-cross-origin",
+        "body": "{\"columns\":[\"issuetype\",\"issuekey\",\"summary\",\"resolution\",\"priority\",\"created\",\"assignee\",\"updated\"]}",
+        "method": "PUT",
+        "mode": "cors",
+        "credentials": "include"
+        });
+        return true;
       }
-    }
-  });
+  }
+});
